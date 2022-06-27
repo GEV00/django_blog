@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Напишите комментарий</title>
+</head>
+<body>
+    <form method="post" action="">
+        {% if not request.user.is_authenticated %}
+            <h4>Комментировать записи могут только авторизированные пользователи</h4>
+        {% else %}
+            {% csrf_token %}
+            {{ form.as_p }}
+        {% endif %}
+        <button type="submit">Опубликовать</button>
+    </form>
+</body>
+</html>

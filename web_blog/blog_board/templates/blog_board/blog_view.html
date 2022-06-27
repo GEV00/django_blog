@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ blog_data.title }}</title>
+</head>
+<body>
+    <h1> {{ blog_data.title }} </h1>
+    <p> {{ blog_data.text }} </p>
+    <p> Автор: {{ blog_data.user.username }} </p>
+    <p> Дата создания: {{ blog_data.created_at }} </p>
+    {% if comments %}
+        <h3>Комментарии ({{ comments.count }}):</h3>
+        {% for comment in comments %}
+            <h4> {{ comment.user }} | {{ comment.created_at }} </h4>
+            <p> {{ comment.content }} </p>
+            {% if request.user == comment.user %}
+                <a href="/blogs/{{ blog_data.id }}/edit_com/{{ comment.id }}/">ред.</a> 
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <h2>Комментариев нет</h2>
+    {% endif %}
+    <p><button><a href="/blogs/{{ blog_data.id }}/add_com/">Добавить комментарий</a></button></p>
+</body>
+</html>

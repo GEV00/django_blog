@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Записи</title>
+</head>
+<body>
+    {% if blog_list %}
+        <h1>Все записи</h1>
+        {% if request.user.is_authenticated %}
+            <button><a href="create/">Создать запись</a></button>
+        {% endif %}
+        {% for blog in blog_list %}
+            <h3><a href="{{ blog.id }}/"> {{ blog.title }} </a></h3>
+            <p>Автор: {{ blog.user.username }}</p>
+            <p>{{ blog }}</p> <! ограничение на 100 символов реализовано в models, def str!>
+        {% endfor %}
+    {% else %}
+        <h2>Записей еще нет</h2>
+    {% endif %}
+</body>
+</html>
