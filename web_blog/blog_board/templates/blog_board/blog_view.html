@@ -11,18 +11,36 @@
     <p> {{ blog_data.text }} </p>
     <p> Автор: {{ blog_data.user.username }} </p>
     <p> Дата создания: {{ blog_data.created_at }} </p>
-    {% if comments %}
-        <h3>Комментарии ({{ comments.count }}):</h3>
-        {% for comment in comments %}
-            <h4> {{ comment.user }} | {{ comment.created_at }} </h4>
-            <p> {{ comment.content }} </p>
-            {% if request.user == comment.user %}
-                <a href="/blogs/{{ blog_data.id }}/edit_com/{{ comment.id }}/">ред.</a> 
+    {% if not blog_data.is_active == 2 %}
+        {% if comments %}
+            <h3>Комментарии ({{ comments.count }}):</h3>
+            {% for comment in comments %}
+                <h4> {{ comment.user }} | {{ comment.created_at }} </h4>
+                {% if comment.ban_status %}
+                    <p><i>Удален модератором </i></p>
+                {% else %}
+                    <p> {{ comment.content }} </p>
+                {% endif %}
+                {% if request.user == comment.user %}
+                    <a href="/blogs/{{ blog_data.id }}/edit_com/{{ comment.id }}/">ред.</a> 
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <h2>Комментариев нет</h2>
+        {% endif %}
+        {% if blog_data.is_active == 1 %}
+            {% if perms.blog_board.add_comments %}
+                <p><button><a href="/blogs/{{ blog_data.id }}/add_com/">Добавить комментарий</a></button></p>
             {% endif %}
-        {% endfor %}
+        {% endif %}
     {% else %}
-        <h2>Комментариев нет</h2>
+        {% if moder_comm %}
+            <h5>Комментарий модератора:</h5>
+            {{ moder_comm.first }}
+        {% else %}
+            <h5>Модератор скоро оставит комментарий</h5>
+        {% endif %}
     {% endif %}
-    <p><button><a href="/blogs/{{ blog_data.id }}/add_com/">Добавить комментарий</a></button></p>
+
 </body>
 </html>

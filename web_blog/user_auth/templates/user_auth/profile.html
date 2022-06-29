@@ -4,12 +4,49 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> {{ request.user }} </title>
+    <title> {{ request.user.username }} </title>
 </head>
 <body>
-    <h2>Добавить инфу из Profile и User с возможностью редактировать</h2>
+    <h2>
+        Добавить инфу из Profile и User с возможностью редактировать
+        + отображение статуса постов и причин отказа к их публикации
+    </h2>
+    <h5>Личная информация:</h5>
+    <p>Имя: {{ request.user.first_name }}</p>
+    <p>Фамилия: {{ profile.second_name }}</p>
+    <p>Отчество: {{ request.user.last_name }}</p>
+    <h5>Контактные данные:</h5>
+    <p>Телефон: {{ profile.phone }}</p>
+    <p>Почта: {{ profile.email }}</p>
+    <h5>Прочее:</h5>
+    {% if request.user.is_superuser %}
+        <p><b>Админ</b></p>
+    {% elif profile.is_moderator and request.user.is_staff %}
+        <p><b>Модератор</b></p>
+        <p>Верифицирован: да</p>
+    {% elif profile.is_verify %}
+        <p>Верифицирован: да</p>
+    {% else %}
+        <p>Верифицирован: нет</p>
+    {% endif %}
+    <h5>Публикации({{ profile.num_of_posts }}):</h5>
+    {% for post in posts %}
+        <p>
+            <a href="/blogs/{{ post.id }}/">{{ post.title }}</a>
+            {% if post.is_active == 0 %}
+                <b>На проверке</b>
+            {% elif post.is_active == 2 %}
+                <b>НЕ ПРОШЕЛ ПРОВЕРКУ (см. комментарий модератора)</b>
+            {% endif %}
+        
+        </p>
+    {% endfor %}
     <button><a href="/logout/">Выйти из профиля</a></button>
     <button><a href="/blogs/">Перейти к записям</a></button>
     <button><a href="/blogs/create/">Создать запись</a></button>
+    {% if request.user.is_staff %}
+        <button><a href="/admin/">Административная панель</a></button>
+    {% endif %}
+    <button><a href="edit/">Редактировать профиль</a></button>
 </body>
 </html>

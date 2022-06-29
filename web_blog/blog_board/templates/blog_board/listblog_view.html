@@ -9,13 +9,16 @@
 <body>
     {% if blog_list %}
         <h1>Все записи</h1>
+        <p><a href="/profile/">Мой профиль</a></p>
         {% if request.user.is_authenticated %}
             <button><a href="create/">Создать запись</a></button>
         {% endif %}
         {% for blog in blog_list %}
-            <h3><a href="{{ blog.id }}/"> {{ blog.title }} </a></h3>
-            <p>Автор: {{ blog.user.username }}</p>
-            <p>{{ blog }}</p> <! ограничение на 100 символов реализовано в models, def str!>
+            {% if blog.is_active == 1 %}
+                <h3><a href="{{ blog.id }}/"> {{ blog.title }} </a></h3>
+                <p>Автор: {{ blog.user.username }}</p>
+                <p>{{ blog }}</p> <! ограничение на 100 символов реализовано в models, def str!>
+            {% endif %}
         {% endfor %}
     {% else %}
         <h2>Записей еще нет</h2>

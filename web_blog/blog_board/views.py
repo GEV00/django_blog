@@ -1,10 +1,11 @@
-from shutil import register_unpack_format
+from asyncio.windows_events import NULL
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import ListView
 from blog_board.models import Blogs, Comments
 from blog_board.forms import BlogForm, CommentForm
+from blog_board.models import ModerComment
 
 class BlogListView(ListView):
     model = Blogs
@@ -16,9 +17,14 @@ def detail_blog(request, blog_id):
     
     blog_data = Blogs.objects.get(id=blog_id)
     comments = Comments.objects.filter(blog_id=blog_id)
+    if (blog_data.is_active == 2):
+        moder_comm = ModerComment.objects.filter(post=blog_data)
+    else:
+        moder_comm = NULL
 
     return render(request, 'blog_board/blog_view.html', context={'blog_data':blog_data,
-                                                                'comments':comments})
+                                                                'comments':comments,
+                                                                'moder_comm':moder_comm})
 
 
 class CreateBlogView(View):
