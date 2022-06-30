@@ -10,8 +10,9 @@
     <h2>
         Добавить инфу из Profile и User с возможностью редактировать
         + отображение статуса постов и причин отказа к их публикации
-    </h2>
+    </h2> <! C:/Users/grigo/django/django_blog/web_blog/media/{{ profile.avatar }} !>
     <h5>Личная информация:</h5>
+    <p><img src="../../../media/{{ profile.avatar }}" alt="Avatar" width=150></p> <! не работает !>
     <p>Имя: {{ request.user.first_name }}</p>
     <p>Фамилия: {{ profile.second_name }}</p>
     <p>Отчество: {{ request.user.last_name }}</p>

@@ -4,14 +4,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ blog_data.title }}</title>
+    <title>{{ blog_data.first.post.title }}</title>
 </head>
 <body>
-    <h1> {{ blog_data.title }} </h1>
-    <p> {{ blog_data.text }} </p>
-    <p> Автор: {{ blog_data.user.username }} </p>
-    <p> Дата создания: {{ blog_data.created_at }} </p>
-    {% if not blog_data.is_active == 2 %}
+    <h1> {{ blog_data.first.post.title }} </h1>
+    <p> {{ blog_data.first.post.text }} </p>
+    {% for image in blog_data %}
+        <img src="../../../media/{{ image.file }}" alt="{{ image.id }}" width="150">
+    {% endfor %}
+    <p> Автор: {{ blog_data.first.post.user.username }} </p>
+    <p> Дата создания: {{ blog_data.first.post.created_at }} </p>
+    {% if not blog_data.first.post.is_active == 2 %}
         {% if comments %}
             <h3>Комментарии ({{ comments.count }}):</h3>
             {% for comment in comments %}
@@ -22,15 +25,15 @@
                     <p> {{ comment.content }} </p>
                 {% endif %}
                 {% if request.user == comment.user %}
-                    <a href="/blogs/{{ blog_data.id }}/edit_com/{{ comment.id }}/">ред.</a> 
+                    <a href="/blogs/{{ blog_data.first.post.id }}/edit_com/{{ comment.id }}/">ред.</a> 
                 {% endif %}
             {% endfor %}
         {% else %}
             <h2>Комментариев нет</h2>
         {% endif %}
-        {% if blog_data.is_active == 1 %}
+        {% if blog_data.first.post.is_active == 1 %}
             {% if perms.blog_board.add_comments %}
-                <p><button><a href="/blogs/{{ blog_data.id }}/add_com/">Добавить комментарий</a></button></p>
+                <p><button><a href="/blogs/{{ blog_data.first.post.id }}/add_com/">Добавить комментарий</a></button></p>
             {% endif %}
         {% endif %}
     {% else %}

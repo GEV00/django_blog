@@ -124,3 +124,5 @@ STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = '/profile/'
 
 SESSION_COOKIE_AGE = 7*24*60*60 #сессия 1 НЕДЕЛЯ
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

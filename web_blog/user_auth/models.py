@@ -24,6 +24,7 @@ class Profile(models.Model):
                                     choices=VERIFY_CHOISES)
     is_moderator = models.BooleanField(default=False, verbose_name='Статус модерации',
                                     choices=MODERATOR_CHOISES)
+    avatar = models.ImageField(upload_to='user_avatars/')
 
     class Meta:
         db_table = 'Профиль'
@@ -31,4 +32,3 @@ class Profile(models.Model):
             ('can_verify', 'Can verify users'),
             ('can_moderate', 'Can be a moderator'),
         )
-

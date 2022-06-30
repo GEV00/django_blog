@@ -3,9 +3,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import ListView
-from blog_board.models import Blogs, Comments
+from blog_board.models import Blogs, Comments, ModerComment, BlogPhotos
 from blog_board.forms import BlogForm, CommentForm
-from blog_board.models import ModerComment
 
 class BlogListView(ListView):
     model = Blogs
@@ -15,10 +14,10 @@ class BlogListView(ListView):
 
 def detail_blog(request, blog_id):
     
-    blog_data = Blogs.objects.get(id=blog_id)
+    blog_data = BlogPhotos.objects.filter(post_id=blog_id)
     comments = Comments.objects.filter(blog_id=blog_id)
-    if (blog_data.is_active == 2):
-        moder_comm = ModerComment.objects.filter(post=blog_data)
+    if (blog_data[0].post.is_active == 2):
+        moder_comm = ModerComment.objects.filter(post=blog_data[0].post)
     else:
         moder_comm = NULL
 
@@ -36,14 +35,22 @@ class CreateBlogView(View):
         return render(request, 'blog_board/create_blog.html', context={'form':form})
 
     def post(self, request):
-
-        form = BlogForm(request.POST)
+        form = BlogForm(request.POST, request.FILES)
 
         if form.is_valid():
-            form.cleaned_data['user'] = request.user   
-            Blogs.objects.create(**form.cleaned_data)
+            #form.cleaned_data['user'] = request.user
+            blog = Blogs.objects.create(**{
+                'title':form.cleaned_data['title'],
+                'text':form.cleaned_data['text'],
+                'user':request.user
+            })
+            files = request.FILES.getlist('images')
+            for f in files:
+                BlogPhotos.objects.create(**{
+                    'file':f,
+                    'post':blog
+                })
             return HttpResponseRedirect('../')
-
         return render(request, 'blog_board/create_blog.html', context={'form':form})
 
 

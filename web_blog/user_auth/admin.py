@@ -9,6 +9,25 @@ class ProfileAdmin(admin.ModelAdmin):
     list_filter = ['user', 'is_verify']
     search_fields = ['user']
 
+    fieldsets = (
+        ('Основные сведения', {
+            "fields": (
+                'user', 'second_name', 'avatar'
+            ),
+        }),
+        ('Контактные данные', {
+            "fields": (
+                'phone', 'email'
+            ),
+        }),
+        ('Дополнительная информация', {
+            "fields": (
+                'num_of_posts', 'is_verify', 'is_moderator'
+            ),
+        }),
+    )
+    
+
     def set_verify(self, request, queryset):
         # при проверке permissions, добавляемого в Meta модели не нужно указывать ..._<model>:
         # просто <app>.<action> 

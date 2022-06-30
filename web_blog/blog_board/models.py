@@ -44,6 +44,16 @@ class ModerComment(models.Model): # отработать удобную логи
         return self.content
     
 
+class BlogPhotos(models.Model):
+
+    file = models.ImageField(upload_to='blog_photos/')
+
+    post = models.ForeignKey(Blogs, on_delete=models.CASCADE, null=True,
+                            verbose_name='Публикация', related_name='post1')
+
+    class Meta:
+        db_table = 'Фото публикаций'
+
 
 class Comments(models.Model):
 

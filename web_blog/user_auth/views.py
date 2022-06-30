@@ -32,9 +32,10 @@ class UserRegister(View):
 
     def post(self, request):
 
-        form = UserRegisterForm(request.POST)
+        form = UserRegisterForm(request.POST, request.FILES)
 
         if form.is_valid():
+            avatar = request.FILES['avatar']
             user = form.save()
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
@@ -43,9 +44,10 @@ class UserRegister(View):
             email = form.cleaned_data['email']
             Profile.objects.create(
                 user=user,
-                second_name=second_name, 
-                phone=phone, 
-                email=email
+                second_name=second_name,
+                phone=phone,
+                email=email,
+                avatar=avatar
             )
             user = authenticate(username=username, password=password)
             login(request, user)
@@ -76,7 +78,7 @@ class UserProfileEdit(View):
 
         user = request.user
         username = user.username
-        form = UserEditProfileForm(request.POST, instance=user)
+        form = UserEditProfileForm(request.POST, request.FILES, instance=user)
 
         if form.is_valid():
             username = form.cleaned_data['username']
@@ -85,15 +87,17 @@ class UserProfileEdit(View):
             email = form.cleaned_data['email']
             second_name = form.cleaned_data['second_name']
             phone = form.cleaned_data['phone']
+            avatar = request.FILES['avatar']
             User.objects.filter(username=username).update(
                 username=username,
                 first_name=first_name,
                 last_name=last_name,
-                email=email
+                email=email,
             )
             Profile.objects.filter(user=user).update(
                 second_name=second_name,
-                phone=phone
+                phone=phone,
+                avatar=avatar
             )
             return HttpResponseRedirect('/profile/')
 
