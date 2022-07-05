@@ -21,10 +21,14 @@ class CSVForm(forms.Form):
 
     def clean_file(self): #название должно быть clean_*название поля*
         file = self.cleaned_data['file']
-        with open(file, newline='') as f:
-            csv_file = csv.DictReader(f)
-            if not (csv_file['Title'] and csv_file['Text']):
-                raise ValidationError(f"Неправильная структура переданного файла:",
-                                      "первый столбец должен иметь название 'Title'",
-                                      ", второй дожнен иметь название 'Text'.")
-        return file
+        f = file.read().decode('utf-8').strip().split('\n') #читаем csv файл, убираем лишнии пустые строки, разделяем по строкам
+        csv_file = csv.reader(f, delimiter=';') #разбираем построчно по разделителю ';', т.к он в csv файле
+        for raw in csv_file:
+            print(raw)
+            if not (raw[0] == 'Title' and raw[1] == 'Text'):
+                raise ValidationError(f"Неправильная структура переданного файла:"
+                                        "первый столбец должен иметь название 'Title',"
+                                        " второй столбец дожнен иметь название 'Text'")
+            break
+       
+        return csv_file #вернет в cleadned_data['file'] csv_file

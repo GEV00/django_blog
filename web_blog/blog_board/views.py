@@ -69,17 +69,17 @@ class CreateBlogFromCSV(View):
         form = CSVForm(request.POST, request.FILES)
 
         if form.is_valid():
-            file = request.FILES('file')
-            with open(file, newline='') as f:
-                blogs_data = csv.reader(f)
-                for raw in blogs_data:
-                    #валидация файла см. в forms.py
+            csv_file = form.cleaned_data['file']
+            for raw in csv_file:
                     title = raw[0]
                     text = raw[1]
-                    Blogs.objects.create(**{
+                    new_post = Blogs.objects.create(**{
                         'title':title,
                         'text':text,
                         'user':request.user
+                    })
+                    BlogPhotos.objects.create(**{   #создаем объект в этой БД, чтобы обеспечить работу функции blog_view 
+                        'post':new_post
                     })
             return HttpResponseRedirect('../../')
 
