@@ -5,7 +5,7 @@ from django.views import View
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import login, authenticate
-from user_auth.forms import UserRegisterForm, UserEditProfileForm
+from user_auth.forms import UserRegisterForm, UserEditProfileForm, UserEditForm
 from blog_board.models import Blogs
 
 def index(request):
@@ -58,50 +58,37 @@ class UserRegister(View):
             
 def profile(request):
 
-    profile = Profile.objects.filter(user=request.user)
-    posts = Blogs.objects.filter(user=request.user)
-    profile.update(num_of_posts=posts.count())
+    user = request.user
+    #profile = Profile.objects.filter(user=user)
+    posts = Blogs.objects.filter(user=user)
+    user.profile.num_of_posts = posts.count()
+    user.profile.save()
 
-    return render(request, 'user_auth/profile.html', context={'profile':profile[0],
-                                                                'posts':posts})
+    return render(request, 'user_auth/profile.html', context={'posts':posts})
 
 class UserProfileEdit(View):
 
     def get(self, request):
 
-        user = request.user
-        form = UserEditProfileForm(instance=user)
+        user_form = UserEditForm(instance=request.user)
+        profile_form = UserEditProfileForm(instance=request.user.profile)
 
-        return render(request, 'user_auth/edit_profile.html', context={'form':form})
+        return render(request, 'user_auth/edit_profile.html', context={'user_form':user_form,
+                                                                        'profile_form':profile_form})
 
     def post(self, request):
 
-        user = request.user
-        username = user.username
-        form = UserEditProfileForm(request.POST, request.FILES, instance=user)
-
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
-            email = form.cleaned_data['email']
-            second_name = form.cleaned_data['second_name']
-            phone = form.cleaned_data['phone']
-            avatar = request.FILES['avatar']
-            User.objects.filter(username=username).update(
-                username=username,
-                first_name=first_name,
-                last_name=last_name,
-                email=email,
-            )
-            Profile.objects.filter(user=user).update(
-                second_name=second_name,
-                phone=phone,
-                avatar=avatar
-            )
+        user_form = UserEditForm(request.POST, instance=request.user)
+        profile_form = UserEditProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        
+        if (user_form.is_valid() and profile_form.is_valid()):
+            user_form.save()
+            profile_form.save()
+            
             return HttpResponseRedirect('/profile/')
 
-        return render(request, 'user_auth/edit_profile.html', context={'form':form})
+        return render(request, 'user_auth/edit_profile.html', context={'user_form':user_form,
+                                                                        'profile_form':profile_form})
             
             
 

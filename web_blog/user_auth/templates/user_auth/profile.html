@@ -12,25 +12,25 @@
         + отображение статуса постов и причин отказа к их публикации
     </h2> <! C:/Users/grigo/django/django_blog/web_blog/media/{{ profile.avatar }} !>
     <h5>Личная информация:</h5>
-    <p><img src="../../../media/{{ profile.avatar }}" alt="Avatar" width=150></p> <! не работает !>
+    <p><img src="../../../media/{{ request.user.profile.avatar }}" alt="Avatar" width=150></p> <! не работает !>
     <p>Имя: {{ request.user.first_name }}</p>
-    <p>Фамилия: {{ profile.second_name }}</p>
+    <p>Фамилия: {{ request.user.profile.second_name }}</p>
     <p>Отчество: {{ request.user.last_name }}</p>
     <h5>Контактные данные:</h5>
-    <p>Телефон: {{ profile.phone }}</p>
-    <p>Почта: {{ profile.email }}</p>
+    <p>Телефон: {{ request.user.profile.phone }}</p>
+    <p>Почта: {{ request.user.email }}</p>
     <h5>Прочее:</h5>
     {% if request.user.is_superuser %}
         <p><b>Админ</b></p>
-    {% elif profile.is_moderator and request.user.is_staff %}
+    {% elif  request.user.profile.is_moderator and request.user.is_staff %}
         <p><b>Модератор</b></p>
         <p>Верифицирован: да</p>
-    {% elif profile.is_verify %}
+    {% elif  request.user.profile.is_verify %}
         <p>Верифицирован: да</p>
     {% else %}
         <p>Верифицирован: нет</p>
     {% endif %}
-    <h5>Публикации({{ profile.num_of_posts }}):</h5>
+    <h5>Публикации({{  request.user.profile.num_of_posts }}):</h5>
     {% for post in posts %}
         <p>
             <a href="/blogs/{{ post.id }}/">{{ post.title }}</a>
