@@ -7,6 +7,7 @@
     <title>Создание записи</title>
 </head>
 <body>
+    <button><a href="from_csv/">Создать несколько записей из файла CSV</a></button>
     <form method="post" action="" enctype="multipart/form-data">
         {% if not request.user.is_authenticated %}
             <h4>Создавать записи могут только авторизированные пользователи</h4>

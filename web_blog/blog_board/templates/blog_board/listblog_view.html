@@ -9,8 +9,8 @@
 <body>
     {% if blog_list %}
         <h1>Все записи</h1>
-        <p><a href="/profile/">Мой профиль</a></p>
         {% if request.user.is_authenticated %}
+            <p><a href="/profile/">Мой профиль</a></p>
             <button><a href="create/">Создать запись</a></button>
         {% endif %}
         {% for blog in blog_list %}

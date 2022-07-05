@@ -1,10 +1,12 @@
 from asyncio.windows_events import NULL
+import csv
+from wsgiref.util import request_uri
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import ListView
 from blog_board.models import Blogs, Comments, ModerComment, BlogPhotos
-from blog_board.forms import BlogForm, CommentForm
+from blog_board.forms import BlogForm, CommentForm, CSVForm
 
 class BlogListView(ListView):
     model = Blogs
@@ -53,6 +55,35 @@ class CreateBlogView(View):
             return HttpResponseRedirect('../')
         return render(request, 'blog_board/create_blog.html', context={'form':form})
 
+
+class CreateBlogFromCSV(View):
+    
+    def get(self, request):
+
+        form = CSVForm
+
+        return render(request, 'blog_board/csv_loading.html', context={'form':form})
+
+    def post(self, request):
+        
+        form = CSVForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            file = request.FILES('file')
+            with open(file, newline='') as f:
+                blogs_data = csv.reader(f)
+                for raw in blogs_data:
+                    #валидация файла см. в forms.py
+                    title = raw[0]
+                    text = raw[1]
+                    Blogs.objects.create(**{
+                        'title':title,
+                        'text':text,
+                        'user':request.user
+                    })
+            return HttpResponseRedirect('../../')
+
+        return render(request, 'blog_board/csv_loading.html', context={'form':form})
 
 class CreateCommentView(View):
     
