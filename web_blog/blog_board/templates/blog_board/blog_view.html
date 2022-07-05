@@ -4,20 +4,20 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ blog_data.first.post.title }}</title>
+    <title>{{ blog.title }}</title>
 </head>
 <body>
-    <h1> {{ blog_data.first.post.title }} </h1>
-    <p> {{ blog_data.first.post.text }} </p>
-    {% for image in blog_data %}
+    <h1> {{ blog.title }} </h1>
+    <p> {{ blog.text }} </p>
+    {% for image in blog.post1.all %}
         <img src="../../../media/{{ image.file }}" alt="{{ image.id }}" width="150">
     {% endfor %}
-    <p> Автор: {{ blog_data.first.post.user.username }} </p>
-    <p> Дата создания: {{ blog_data.first.post.created_at }} </p>
-    {% if not blog_data.first.post.is_active == 2 %}
-        {% if comments %}
-            <h3>Комментарии ({{ comments.count }}):</h3>
-            {% for comment in comments %}
+    <p> Автор: {{ blog.user.username }} </p>
+    <p> Дата создания: {{ blog.created_at }} </p>
+    {% if not blog.is_active == 2 %}
+        {% if not blog.blog.all.count == 0 %}
+            <h3>Комментарии ({{ blog.blog.all.count }}):</h3>
+            {% for comment in blog.blog.all %}
                 <h4> {{ comment.user }} | {{ comment.created_at }} </h4>
                 {% if comment.ban_status %}
                     <p><i>Удален модератором </i></p>
@@ -25,21 +25,21 @@
                     <p> {{ comment.content }} </p>
                 {% endif %}
                 {% if request.user == comment.user %}
-                    <a href="/blogs/{{ blog_data.first.post.id }}/edit_com/{{ comment.id }}/">ред.</a> 
+                    <a href="/blogs/{{ blog.id }}/edit_com/{{ comment.id }}/">ред.</a> 
                 {% endif %}
             {% endfor %}
         {% else %}
             <h2>Комментариев нет</h2>
         {% endif %}
-        {% if blog_data.first.post.is_active == 1 %}
+        {% if blog.is_active == 1 %}
             {% if perms.blog_board.add_comments %}
-                <p><button><a href="/blogs/{{ blog_data.first.post.id }}/add_com/">Добавить комментарий</a></button></p>
+                <p><button><a href="/blogs/{{ blog.id }}/add_com/">Добавить комментарий</a></button></p>
             {% endif %}
         {% endif %}
     {% else %}
-        {% if moder_comm %}
+        {% if blog.post %}
             <h5>Комментарий модератора:</h5>
-            {{ moder_comm.first }}
+            {{ blog.post }}
         {% else %}
             <h5>Модератор скоро оставит комментарий</h5>
         {% endif %}

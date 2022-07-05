@@ -16,16 +16,9 @@ class BlogListView(ListView):
 
 def detail_blog(request, blog_id):
     
-    blog_data = BlogPhotos.objects.filter(post_id=blog_id)
-    comments = Comments.objects.filter(blog_id=blog_id)
-    if (blog_data[0].post.is_active == 2):
-        moder_comm = ModerComment.objects.filter(post=blog_data[0].post)
-    else:
-        moder_comm = NULL
+    blog = Blogs.objects.get(id=blog_id)
 
-    return render(request, 'blog_board/blog_view.html', context={'blog_data':blog_data,
-                                                                'comments':comments,
-                                                                'moder_comm':moder_comm})
+    return render(request, 'blog_board/blog_view.html', context={'blog':blog})
 
 
 class CreateBlogView(View):
