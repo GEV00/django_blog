@@ -27,3 +27,4 @@ class CSVForm(forms.Form):
                 raise ValidationError(f"Неправильная структура переданного файла:",
                                       "первый столбец должен иметь название 'Title'",
                                       ", второй дожнен иметь название 'Text'.")
+        return file
