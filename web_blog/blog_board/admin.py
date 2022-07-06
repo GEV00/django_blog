@@ -1,4 +1,3 @@
-from http.client import ImproperConnectionState
 from django.contrib import admin
 from blog_board.models import Blogs, Comments, ModerComment
 from django.core.exceptions import PermissionDenied
