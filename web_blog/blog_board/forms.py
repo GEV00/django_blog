@@ -7,7 +7,7 @@ import csv
 class BlogForm(forms.Form):
     title = forms.CharField(label='Заголовок', max_length=15, required=True)
     text = forms.CharField(label='Содержание', max_length=1000, widget=forms.Textarea, required=True)
-    images = forms.ImageField(label='Фото', widget=forms.ClearableFileInput(attrs={'multiple':True}))
+    images = forms.ImageField(label='Фото', widget=forms.ClearableFileInput(attrs={'multiple':True}), required=False)
 
 
 class CommentForm(forms.ModelForm):
