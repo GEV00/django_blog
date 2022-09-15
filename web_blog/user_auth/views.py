@@ -1,5 +1,7 @@
 from django.http import HttpResponseRedirect
-from user_auth.models import Profile
+from django.utils.translation import gettext as _
+from django.utils.formats import date_format
+from user_auth.models import Profiles
 from django.shortcuts import render
 from django.views import View
 from django.contrib.auth.models import User
@@ -7,11 +9,16 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import login, authenticate
 from user_auth.forms import UserRegisterForm, UserEditProfileForm, UserEditForm
 from blog_board.models import Blogs
+from datetime import datetime
 
 def index(request):
+    msg = _('Hi there! Today is %(date)s | %(time)s') % {
+        'date': date_format(datetime.now().date(), format='SHORT_DATE_FORMAT', use_l10n=True),
+        'time': datetime.strftime(datetime.now(), '%H:%M:%S')
+    }
     if request.user.is_authenticated:
         return HttpResponseRedirect('/profile/')
-    return render(request, 'user_auth/index.html', {})
+    return render(request, 'user_auth/index.html', {'message':msg})
 
 
 class UserLogIn(LoginView):
@@ -42,7 +49,7 @@ class UserRegister(View):
             second_name = form.cleaned_data['second_name']
             phone = form.cleaned_data['phone']
             email = form.cleaned_data['email']
-            Profile.objects.create(
+            Profiles.objects.create(
                 user=user,
                 second_name=second_name,
                 phone=phone,

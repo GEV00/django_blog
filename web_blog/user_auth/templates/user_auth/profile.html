@@ -1,3 +1,5 @@
+{% extends 'base.html' %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,47 +9,48 @@
     <title> {{ request.user.username }} </title>
 </head>
 <body>
-    <h2>
-        Добавить инфу из Profile и User с возможностью редактировать
-        + отображение статуса постов и причин отказа к их публикации
-    </h2>
-    <h5>Личная информация:</h5>
-    <p><img src="{{ request.user.profile.avatar.url }}" alt="Avatar" width=150></p> <! не работает !>
-    <p>Имя: {{ request.user.first_name }}</p>
-    <p>Фамилия: {{ request.user.profile.second_name }}</p>
-    <p>Отчество: {{ request.user.last_name }}</p>
-    <h5>Контактные данные:</h5>
-    <p>Телефон: {{ request.user.profile.phone }}</p>
-    <p>Почта: {{ request.user.email }}</p>
-    <h5>Прочее:</h5>
-    {% if request.user.is_superuser %}
-        <p><b>Админ</b></p>
-    {% elif  request.user.profile.is_moderator and request.user.is_staff %}
-        <p><b>Модератор</b></p>
-        <p>Верифицирован: да</p>
-    {% elif  request.user.profile.is_verify %}
-        <p>Верифицирован: да</p>
-    {% else %}
-        <p>Верифицирован: нет</p>
-    {% endif %}
-    <h5>Публикации({{  request.user.profile.num_of_posts }}):</h5>
-    {% for post in posts %}
-        <p>
-            <a href="/blogs/{{ post.id }}/">{{ post.title }}</a>
-            {% if post.is_active == 0 %}
-                <b>На проверке</b>
-            {% elif post.is_active == 2 %}
-                <b>НЕ ПРОШЕЛ ПРОВЕРКУ (см. комментарий модератора)</b>
-            {% endif %}
-        
-        </p>
-    {% endfor %}
-    <button><a href="/logout/">Выйти из профиля</a></button>
-    <button><a href="/blogs/">Перейти к записям</a></button>
-    <button><a href="/blogs/create/">Создать запись</a></button>
-    {% if request.user.is_staff %}
-        <button><a href="/admin/">Административная панель</a></button>
-    {% endif %}
-    <button><a href="edit/">Редактировать профиль</a></button>
+    {% block content %}
+        <h2>
+            {% trans 'Your Profile'%}
+        </h2>
+        <h5>{% trans 'Private Info'%}</h5>
+        <p><img src="{{ request.user.profile.avatar.url }}" alt="Avatar" width=150></p> <! не работает !>
+        <p>{% trans 'First Name:'%} {{ request.user.first_name }}</p>
+        <p>{% trans 'Last Name:'%} {{ request.user.profile.second_name }}</p>
+        <p>{% trans 'Second Name:'%} {{ request.user.last_name }}</p>
+        <h5>{% trans 'Contacts'%}</h5>
+        <p>{% trans 'Telephone number: '%}{{ request.user.profile.phone }}</p>
+        <p>{% trans 'Email: '%}{{ request.user.email }}</p>
+        <h5>{% trans 'Other:'%}</h5>
+        {% if request.user.is_superuser %}
+            <p><b>{% trans 'Admin'%}</b></p>
+        {% elif  request.user.profile.is_moderator and request.user.is_staff %}
+            <p><b>{% trans 'Moderator'%}</b></p>
+            <p>{% trans 'Verify: yes'%}</p>
+        {% elif  request.user.profile.is_verify %}
+            <p>{% trans 'Verify: yes'%}</p>
+        {% else %}
+            <p>{% trans 'Verify: no'%}</p>
+        {% endif %}
+        <h5>{% trans 'Publications'%}({{  request.user.profile.num_of_posts }}):</h5>
+        {% for post in posts %}
+            <p>
+                <a href="/blogs/{{ post.id }}/">{{ post.title }}</a>
+                {% if post.is_active == 0 %}
+                    <b>{% trans 'On cheak'%}</b>
+                {% elif post.is_active == 2 %}
+                    <b>{% trans 'Cheak is not complite (watch moderator comment)'%}</b>
+                {% endif %}
+            
+            </p>
+        {% endfor %}
+        <button><a href="/logout/">{% trans 'Log out'%}</a></button>
+        <button><a href="/blogs/">{% trans 'Go to blogs'%}</a></button>
+        <button><a href="/blogs/create/">{% trans 'Create your post'%}</a></button>
+        {% if request.user.is_staff %}
+            <button><a href="/admin/">{% trans 'Admin panel'%}</a></button>
+        {% endif %}
+        <button><a href="edit/">{% trans 'Edit profile'%}</a></button>
+    {% endblock content %}
 </body>
 </html>

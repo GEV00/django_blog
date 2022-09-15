@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
-from user_auth.models import Profile
+from user_auth.models import Profiles
 
 
 class UserRegisterForm(UserCreationForm):
@@ -30,7 +30,7 @@ class UserEditForm(forms.ModelForm):
 
 class UserEditProfileForm(forms.ModelForm):
     class Meta:
-        model = Profile
+        model = Profiles
         fields = (
             'second_name', 'phone', 'avatar',
         )

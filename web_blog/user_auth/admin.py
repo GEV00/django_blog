@@ -1,5 +1,5 @@
 from django.contrib import admin
-from user_auth.models import Profile
+from user_auth.models import Profiles
 from django.core.exceptions import PermissionDenied
 
 
@@ -68,4 +68,4 @@ class ProfileAdmin(admin.ModelAdmin):
     set_moder.short_description = 'Сделать модератором'
     set_unmod.short_description = 'Снять статус модератора'
 
-admin.site.register(Profile, ProfileAdmin)
+admin.site.register(Profiles, ProfileAdmin)

@@ -1,0 +1,21 @@
+<!-- создаем базовый шаблон с формой смены языка, чтобы наследуя его всегда иметь эту форму -->
+{% load i18n %}
+{% block header %}
+    <form action="{% url 'set_language' %}", method="post"> <!-- форма отправляется по ссылке пакета i18n в urls.py -->
+        {% csrf_token %}
+        <input type="hidden" name="text" value="{{ redirect_to }}">
+        <select name="language">
+            {% get_current_language  as LANGUAGE_CODE %} <!-- получаем код языка -->
+            {% get_available_languages as LANGUAGES %} <!-- получаем список доступных языков -->
+            {% get_language_info_list for LANGUAGES as languages %} <!-- получаем информацию о языках -->
+            {% for language in languages %} <!-- цикл по языкам -->
+                <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %} selected {% endif %}> <!-- значение = код языка; выставляеем selected, если код языка совпададет с выбранным -->
+                    {{ language.name_local }} ({{ language.code }})
+                </option>
+            {% endfor %} 
+        </select>
+        <input type="submit" value="go"> <!-- submit для перевода через представления i18n, которые доступны через urls.py -->
+    </form>
+{% endblock header %}
+
+{% block content %}{% endblock content %}

@@ -1,3 +1,5 @@
+{% extends 'base.html' %}
+{% load i18n %} <!-- разрешает работать с интернационализацией -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,10 +9,12 @@
     <title>Вход</title>
 </head>
 <body>
-    <! посмотреть записи без входа, вход и регистрация !>
-    <h1>*Сайт с блогами*</h1>
-    <button><a href="blogs/">Перейти к записям</a></button>
-    <button><a href="singup/">Войти</a></button>
-    <button><a href="singin/">Зарегистрироваться</a></button>
-</body>
+    {% block content %}
+        <! посмотреть записи без входа, вход и регистрация !>
+        <h1>{% trans '*Web Blogs*' %}</h1>
+        <p> {{ message }} </p>
+        <button><a href="blogs/">{% trans 'Go to blogs' %}</a></button>
+        <button><a href="singup/">{% trans 'Sing In' %}</a></button>
+        <button><a href="singin/">{% trans 'Sing Up' %}</a></button>
+    {% endblock content %}
 </html>

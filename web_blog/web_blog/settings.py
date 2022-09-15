@@ -37,13 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blog_board',
-    'user_auth',
+    'blog_board.apps.BlogBoardConfig',
+    'user_auth.apps.UserAuthConfig', # указываем конфиг, т.к вносили в него изменения для интерниционализации
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware', # middleware для интернационализации
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -114,6 +115,20 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+# будем интернационализировать страницу входа
+# список языков для перевода
+LANGUAGES = [
+    ('ru', 'Русский'),
+    ('en', 'English'),
+    ('de', 'Deutsch')
+]
+
+# Укажем куда будут сохраняться файлы локализации
+# Важно не "path", а "pathS"
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
 
 
 # Static files (CSS, JavaScript, Images)
