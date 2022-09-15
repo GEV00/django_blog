@@ -37,11 +37,12 @@ class CreateBlogView(View):
                 'user':request.user
             })
             files = request.FILES.getlist('images')
-            for f in files:
-                BlogPhotos.objects.create(**{
-                    'file':f,
-                    'post':blog
-                })
+            if files:
+                for f in files:
+                    BlogPhotos.objects.create(**{
+                        'file':f,
+                        'post':blog
+                    })
             return HttpResponseRedirect('../')
         return render(request, 'blog_board/create_blog.html', context={'form':form})
 
